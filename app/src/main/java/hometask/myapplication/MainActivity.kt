@@ -1,9 +1,13 @@
 package hometask.myapplication
 
-import android.content.Intent
+
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import hometask.myapplication.databinding.ActivityMainBinding
+import hometask.myapplication.MainFragment.Companion.newInstance
+import hometask.myapplication.MainFragment.Companion.TAG
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,21 +21,16 @@ class MainActivity : AppCompatActivity() {
             setContentView(it.root)
         }
 
-        binding?.let {
-            with(it) {
-                button1.setOnClickListener{
-                    val intent = Intent(this@MainActivity, FirstActivity::class.java)
-                    startActivity(intent)
-                }
-                button2.setOnClickListener{
-                    val intent = Intent(this@MainActivity, SecondActivity::class.java)
-                    startActivity(intent)
-                }
-                button3.setOnClickListener{
-                    val intent = Intent(this@MainActivity, ThirdActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.rv_container, newInstance("WELCOME"), TAG)
+            .commit()
+    }
+
+    fun navigateToFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.rv_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
