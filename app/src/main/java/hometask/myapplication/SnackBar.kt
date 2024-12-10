@@ -3,6 +3,4 @@ package hometask.myapplication
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
-fun View.showShackBar(text: String) = Snackbar.make(this,
-                                                    text,
-                                                    Snackbar.LENGTH_LONG).show()
+fun View.showShackBar(text: String) = Snackbar.make(this, text, Snackbar.LENGTH_LONG).show()
