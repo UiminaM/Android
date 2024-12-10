@@ -12,7 +12,7 @@ import hometask.myapplication.QuestsRepository.quests
 import hometask.myapplication.databinding.ItemQuestBinding
 
 class QuestsAdapter(
-    private val list: MutableList<Quest>, // Изменено на MutableList для возможности модификации
+    private val list: MutableList<Quest>,
     private val glide: RequestManager,
     private val listener: (Quest) -> Unit
 ) : RecyclerView.Adapter<QuestsItem>() {
@@ -38,7 +38,7 @@ class QuestsAdapter(
     override fun getItemCount(): Int = list.size
 
     fun addQuest(quest: Quest) {
-        list.add(0, quest) // Добавляем квест в начало списка
-        notifyItemInserted(0) // Уведомляем адаптер о добавлении элемента на позицию 0
+        list.add(0, quest)
+        notifyItemInserted(0)
     }
 }
