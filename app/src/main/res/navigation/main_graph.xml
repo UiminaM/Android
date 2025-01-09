@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="hometask.myapplication.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="hometask.myapplication.FavoriteFragment"
+        android:label="Favorite"
+        tools:layout="@layout/fragment_favorite">
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="hometask.myapplication.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account">
+        <action
+            android:id="@+id/action_accountFragment_to_profileActivity"
+            app:destination="@id/profileActivity"
+            app:enterAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <activity
+        android:id="@+id/profileActivity"
+        android:name="hometask.myapplication.ProfileActivity"
+        android:label="Profile"
+        tools:layout="@layout/activity_profile" >
+    </activity>
+</navigation>
