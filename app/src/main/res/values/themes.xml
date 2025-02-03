@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.musicPlayer" parent="Theme.AppCompat.DayNight">
+
+        <item name="colorPrimary">#FF2600</item>
+        <item name="colorPrimaryVariant">#747273</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <item name="android:colorBackground">#121212</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+
+        <item name="android:buttonStyle">@style/musicButton</item>
+    </style>
+
+    <style name="musicButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">#B6BEBC</item>
+        <item name="android:textColor">#FF2600</item>
+    </style>
+</resources>
