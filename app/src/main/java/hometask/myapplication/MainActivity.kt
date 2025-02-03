@@ -1,68 +1,79 @@
 package hometask.myapplication
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.icu.util.Calendar
-import android.os.Build
+import android.content.ServiceConnection
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.TimePicker
-import androidx.annotation.RequiresApi
+import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import hometask.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private var binding: ActivityMainBinding? = null
+    private var musicPlayer: MusicPlayer? = null
+    private var servBound = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            val binder = p1 as MusicPlayer.MusicBinder
+            musicPlayer = binder.service()
+            servBound = true
 
-        binding = ActivityMainBinding.inflate(layoutInflater).also {
-            setContentView(it.root)
+            binding?.trackTitle?.text = musicPlayer?.getCurrentTrackName()
         }
 
-        val timePick: TimePicker = binding.AlarmTime
-        val btnSet: Button = binding.AlarmButton
-        val alarmStatus: TextView = binding.AlarmStatus
-
-        btnSet.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, timePick.hour)
-            calendar.set(Calendar.MINUTE, timePick.minute)
-            calendar.set(Calendar.SECOND, 0)
-
-            if (calendar.timeInMillis <= System.currentTimeMillis()) {
-                calendar.add(Calendar.DAY_OF_YEAR, 1)
-            }
-
-            val sharedPreferences = getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putLong("alarmTime", calendar.timeInMillis)
-            editor.apply()
-
-            alarm(calendar.timeInMillis)
-            alarmStatus.text = "Установлен будильник на ${timePick.hour}:${timePick.minute}"
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            servBound = false
+            musicPlayer = null
         }
     }
-    @SuppressLint("ScheduleExactAlarm")
-    fun alarm(time: Long) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+
+        val intent = Intent(this, MusicPlayer::class.java)
+        startService(intent)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+        binding?.btnPlay?.setOnClickListener {
+            if (servBound) {
+                musicPlayer?.playMusic()
+                binding?.trackTitle?.text = musicPlayer?.getCurrentTrackName()
+            }
+        }
+
+        binding?.btnPause?.setOnClickListener {
+            if (servBound) {
+                musicPlayer?.pauseMusic()
+                binding?.trackTitle?.text = musicPlayer?.getCurrentTrackName()
+            }
+        }
+
+        binding?.btnNext?.setOnClickListener {
+            if (servBound) {
+                musicPlayer?.nextTrack()
+                binding?.trackTitle?.text = musicPlayer?.getCurrentTrackName()
+            }
+        }
+
+        binding?.btnPrevious?.setOnClickListener {
+            if (servBound) {
+                musicPlayer?.previousTrack()
+                binding?.trackTitle?.text = musicPlayer?.getCurrentTrackName()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (servBound) {
+            unbindService(serviceConnection)
+            servBound = false
+        }
+        binding = null
     }
 }
