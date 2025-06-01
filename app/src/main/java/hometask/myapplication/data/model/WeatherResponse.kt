@@ -1,4 +1,4 @@
-package hometask.myapplication
+package hometask.myapplication.data.model
 
 
 data class WeatherResponse(

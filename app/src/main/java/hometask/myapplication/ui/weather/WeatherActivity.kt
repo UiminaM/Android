@@ -1,4 +1,4 @@
-package hometask.myapplication
+package hometask.myapplication.ui.weather
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import hometask.myapplication.data.model.WeatherResponse
+import hometask.myapplication.data.network.InstanceRetrofit
 import hometask.myapplication.databinding.ActivityWeatherBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
