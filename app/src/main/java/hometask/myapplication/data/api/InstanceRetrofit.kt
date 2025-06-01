@@ -1,4 +1,4 @@
-package hometask.myapplication.data.network
+package hometask.myapplication.data.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

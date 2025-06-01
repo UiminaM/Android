@@ -1,6 +1,6 @@
 package hometask.myapplication.viewmodel
 
-import hometask.myapplication.data.model.WeatherResponse
+import hometask.myapplication.data.api.response.WeatherResponse
 
 sealed class WeatherState {
     object Loading : WeatherState()

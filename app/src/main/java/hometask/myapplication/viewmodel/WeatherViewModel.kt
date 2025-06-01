@@ -1,7 +1,6 @@
 package hometask.myapplication.viewmodel
 
 import androidx.lifecycle.*
-import hometask.myapplication.data.model.WeatherResponse
 import hometask.myapplication.repository.WeatherRepository
 import kotlinx.coroutines.launch
 import java.io.IOException

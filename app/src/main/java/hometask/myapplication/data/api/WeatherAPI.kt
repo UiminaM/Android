@@ -1,6 +1,6 @@
-package hometask.myapplication.data.network
+package hometask.myapplication.data.api
 
-import hometask.myapplication.data.model.WeatherResponse
+import hometask.myapplication.data.api.response.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

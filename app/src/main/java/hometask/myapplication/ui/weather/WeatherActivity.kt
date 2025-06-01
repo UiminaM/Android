@@ -4,15 +4,16 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import hometask.myapplication.data.model.WeatherResponse
-import hometask.myapplication.data.network.InstanceRetrofit
+import hometask.myapplication.data.api.response.WeatherResponse
+import hometask.myapplication.data.api.InstanceRetrofit
 import hometask.myapplication.databinding.ActivityWeatherBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import hometask.myapplication.repository.WeatherRepository
+import hometask.myapplication.utils.WeatherViewModelFactory
+import hometask.myapplication.viewmodel.WeatherState
+import hometask.myapplication.viewmodel.WeatherViewModel
 import java.util.Locale
 
 class WeatherActivity : AppCompatActivity() {
@@ -25,31 +26,27 @@ class WeatherActivity : AppCompatActivity() {
 
         val city = intent.getStringExtra("CITY") ?: error("Error with city")
 
-        lifecycleScope.launch {
-            binding.progressBar.visibility = View.VISIBLE
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    InstanceRetrofit.instance.getWeather(city)
-                }
+        val viewModel: WeatherViewModel by viewModels {
+            WeatherViewModelFactory(WeatherRepository(InstanceRetrofit.instance))
+        }
 
-                if (response.isSuccessful && response.body() != null) {
-                    val weatherData = response.body()!!
-                    updateUI(weatherData)
-                } else {
-                    when (response.code()) {
-                        404 -> Toast.makeText(this@WeatherActivity, "Город не найден", Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(this@WeatherActivity, "Ошибка сервера: ${response.code()}", Toast.LENGTH_SHORT).show()
-                    }
+        viewModel.state.observe(this) { state ->
+            when (state) {
+                is WeatherState.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is WeatherState.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    updateUI(state.weather)
+                }
+                is WeatherState.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this, state.message, Toast.LENGTH_SHORT).show()
                     finish()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this@WeatherActivity, "Ошибка сети: ${e.message}", Toast.LENGTH_SHORT).show()
-                finish()
-            } finally {
-                binding.progressBar.visibility = View.GONE
-                binding.tvCityName.text = "$city"
             }
         }
+
+        viewModel.loadWeather(city)
+        binding.tvCityName.text = city
     }
 
     @SuppressLint("SetTextI18n")
