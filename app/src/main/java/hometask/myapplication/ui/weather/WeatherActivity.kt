@@ -14,12 +14,18 @@ import hometask.myapplication.repository.WeatherRepository
 import hometask.myapplication.utils.WeatherViewModelFactory
 import hometask.myapplication.viewmodel.WeatherState
 import hometask.myapplication.viewmodel.WeatherViewModel
+import hometask.myapplication.App
 import java.util.Locale
+import javax.inject.Inject
 
 class WeatherActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWeatherBinding
 
+    @Inject
+    lateinit var repository: WeatherRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)

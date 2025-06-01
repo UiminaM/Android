@@ -8,7 +8,7 @@ interface WeatherAPI {
     @GET("data/2.5/weather")
     suspend fun getWeather(
         @Query("q") city: String,
-        @Query("appid") apiKey: String = "66fd309048bc08785a67e53eef222290",
+        @Query("appid") apiKey: String = "1503f3bab210b6d39c7c0466829e2042",
         @Query("units") units: String = "metric",
         @Query("lang") lang: String = "ru"
     ): retrofit2.Response<WeatherResponse>

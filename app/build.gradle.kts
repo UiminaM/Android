@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -44,12 +45,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.glide)
     implementation(libs.material)
+    implementation(libs.dagger)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.glide.v4151)
     implementation(libs.retrofit2.retrofit)
+    kapt(libs.dagger.compiler)
 }
